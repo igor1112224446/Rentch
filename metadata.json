@@ -1,0 +1,6 @@
+{
+  "name": "Rentch",
+  "description": "Tinder-style apartment rental discovery app in Tbilisi with swipe mechanics, landlord chats, viewing booking, map view, Telegram alerts, and full Web & Desktop PC support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
