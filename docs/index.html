@@ -1,0 +1,2795 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Rentch — Аренда квартир в Тбилиси | Web & Desktop</title>
+  <link rel="icon" href="icon-192.png">
+  <!-- PWA Manifest & App Icons -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#FF5A5F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Rentch">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+  <style>
+    :root {
+      --primary: #FF5A5F;
+      --primary-dark: #E03B42;
+      --primary-light: #FFEBEB;
+      --primary-container: #FFD9D9;
+      --secondary: #008489;
+      --surface: #FFFFFF;
+      --surface-variant: #F8FAFC;
+      --background: #F1F5F9;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --success: #10B981;
+      --error: #EF4444;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--background);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Outer Wrapper */
+    #app-container {
+      width: 100%;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-xl);
+    }
+
+    /* Mobile Default Viewport */
+    @media (max-width: 859px) {
+      #app-container {
+        max-width: 440px;
+        height: 100vh;
+      }
+      .desktop-sidebar {
+        display: none !important;
+      }
+    }
+
+    /* Desktop Viewport (PC / Mac / Tablets) */
+    @media (min-width: 860px) {
+      #app-container {
+        max-width: 1240px;
+        width: 95vw;
+        height: 92vh;
+        max-height: 900px;
+        border-radius: 28px;
+        border: 1px solid var(--border);
+        flex-direction: row;
+      }
+      .bottom-bar {
+        display: none !important;
+      }
+      .mobile-top-bar {
+        display: none !important;
+      }
+    }
+
+    /* ================= DESKTOP SIDEBAR ================= */
+    .desktop-sidebar {
+      width: 280px;
+      background: #FFFFFF;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 20px;
+      z-index: 25;
+      flex-shrink: 0;
+    }
+
+    .sidebar-top {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-title {
+      font-size: 22px;
+      font-weight: 900;
+      background: linear-gradient(45deg, #FF5A5F, #FF7E5F);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-badge {
+      font-size: 11px;
+      background: #EFF6FF;
+      color: #2563EB;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 700;
+      border: 1px solid #DBEAFE;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-nav-item:hover {
+      background: var(--surface-variant);
+      color: var(--text-main);
+    }
+
+    .sidebar-nav-item.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .sidebar-nav-icon {
+      font-size: 18px;
+    }
+
+    .nav-badge-pill {
+      margin-left: auto;
+      background: var(--primary);
+      color: #FFF;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 12px;
+    }
+
+    .sidebar-shortcuts-card {
+      background: var(--surface-variant);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .shortcuts-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .shortcut-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .kbd-tag {
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    /* ================= MAIN CONTENT AREA ================= */
+    .main-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      background: #FFFFFF;
+    }
+
+    /* Top Navigation Header (Shared / Desktop) */
+    .desktop-header {
+      height: 64px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: #FFFFFF;
+      z-index: 10;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-page-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Mobile Top Bar */
+    .mobile-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      z-index: 20;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      background: var(--surface-variant);
+      transform: scale(1.04);
+    }
+
+    .icon-btn:active {
+      transform: scale(0.96);
+    }
+
+    .badge-dot {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    /* Screen Views */
+    .screen {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* Bottom Nav Bar (Mobile only) */
+    .bottom-bar {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0 14px 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      z-index: 20;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item .nav-icon {
+      font-size: 20px;
+    }
+
+    /* ================= SCREEN 1: SWIPE (DESKTOP & MOBILE) ================= */
+    .swipe-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      background: var(--surface-variant);
+    }
+
+    .desktop-swipe-layout {
+      width: 100%;
+      max-width: 900px;
+      height: 100%;
+      max-height: 640px;
+      display: flex;
+      position: relative;
+      gap: 28px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 859px) {
+      .swipe-stage {
+        padding: 12px;
+      }
+      .desktop-swipe-layout {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .desktop-spec-panel {
+        display: none !important;
+      }
+    }
+
+    /* Deck and Cards */
+    .deck {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      height: 560px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      cursor: grab;
+      border: 1px solid var(--border);
+      touch-action: none;
+    }
+
+    .card:active {
+      cursor: grabbing;
+    }
+
+    .card-photo-box {
+      width: 100%;
+      height: 58%;
+      position: relative;
+      background: #E2E8F0;
+      overflow: hidden;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .card-price-badge {
+      position: absolute;
+      bottom: 14px;
+      left: 16px;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(8px);
+      color: #FFF;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 20px;
+    }
+
+    .card-district-badge {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      background: var(--primary);
+      color: #FFF;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stamp {
+      position: absolute;
+      top: 24px;
+      padding: 6px 16px;
+      font-size: 28px;
+      font-weight: 900;
+      text-transform: uppercase;
+      border-radius: 12px;
+      border: 3px solid;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10;
+      transition: opacity 0.1s ease;
+    }
+
+    .stamp.rentch {
+      right: 24px;
+      color: #10B981;
+      border-color: #10B981;
+      transform: rotate(15deg);
+    }
+
+    .stamp.nope {
+      left: 24px;
+      color: #EF4444;
+      border-color: #EF4444;
+      transform: rotate(-15deg);
+    }
+
+    .card-info {
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+      background: #FFF;
+    }
+
+    .card-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+
+    .card-address {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      background: var(--surface-variant);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tag.highlight {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary-container);
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Desktop Side Specification Panel */
+    .desktop-spec-panel {
+      flex: 1;
+      max-width: 380px;
+      background: #FFFFFF;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .spec-panel-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .spec-item {
+      background: var(--surface-variant);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .spec-item-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .spec-item-value {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-top: 2px;
+    }
+
+    .landlord-box {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .landlord-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    /* Swipe Action Controls */
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .btn-action {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      background: #FFF;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-action:hover {
+      transform: scale(1.1);
+    }
+
+    .btn-action:active {
+      transform: scale(0.92);
+    }
+
+    .btn-nope {
+      color: #EF4444;
+      border: 2px solid #FEE2E2;
+    }
+
+    .btn-info {
+      width: 48px;
+      height: 48px;
+      font-size: 20px;
+      color: #3B82F6;
+      border: 2px solid #DBEAFE;
+    }
+
+    .btn-like {
+      color: #10B981;
+      border: 2px solid #D1FAE5;
+      font-size: 28px;
+    }
+
+    .btn-reload {
+      width: 48px;
+      height: 48px;
+      font-size: 20px;
+      color: #8B5CF6;
+      border: 2px solid #EDE9FE;
+    }
+
+    /* ================= SCREEN 2: MAP (DESKTOP SPLIT VIEW) ================= */
+    .map-split-container {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+      background: #E2E8F0;
+    }
+
+    .map-canvas-col {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #EEF2F6;
+      overflow: hidden;
+    }
+
+    .map-svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .map-marker {
+      position: absolute;
+      background: var(--primary);
+      color: #FFF;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border: 2px solid #FFF;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+
+    .map-marker:hover, .map-marker.active {
+      transform: translate(-50%, -50%) scale(1.15);
+      background: #0F172A;
+      z-index: 20;
+    }
+
+    .map-sidebar-col {
+      width: 380px;
+      background: #FFFFFF;
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 20px;
+      gap: 16px;
+    }
+
+    @media (max-width: 859px) {
+      .map-sidebar-col {
+        display: none !important;
+      }
+      .map-sheet-mobile {
+        display: flex !important;
+      }
+    }
+
+    .map-sheet-mobile {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      right: 14px;
+      background: #FFF;
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: var(--shadow-xl);
+      display: none;
+      gap: 12px;
+      z-index: 20;
+    }
+
+    .map-apt-card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .map-apt-card:hover, .map-apt-card.selected {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .map-apt-thumb {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
+
+    /* ================= SCREEN 3: CHATS (DESKTOP 2-COLUMN) ================= */
+    .chats-layout {
+      flex: 1;
+      display: flex;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .chats-inbox {
+      width: 320px;
+      background: #FFFFFF;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .chat-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .chat-item:hover, .chat-item.active {
+      background: var(--surface-variant);
+    }
+
+    .chat-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #E2E8F0;
+      flex-shrink: 0;
+    }
+
+    .chat-thread-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface-variant);
+      position: relative;
+    }
+
+    .convo-header {
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+      background: #FFFFFF;
+    }
+
+    .convo-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .msg-bubble {
+      max-width: 75%;
+      padding: 10px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.45;
+      position: relative;
+    }
+
+    .msg-bot {
+      background: #FFF;
+      align-self: flex-start;
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .msg-user {
+      background: var(--primary);
+      color: #FFF;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .booking-card {
+      background: #FFFFFF;
+      border: 1px solid #BFDBFE;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 420px;
+      align-self: flex-start;
+    }
+
+    .booking-title {
+      font-weight: 800;
+      color: #1E40AF;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .booking-btn {
+      background: #2563EB;
+      color: #FFF;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+
+    .booking-btn:hover {
+      background: #1D4ED8;
+    }
+
+    .booking-btn.confirmed {
+      background: var(--success);
+    }
+
+    .chips-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 20px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border);
+    }
+
+    .chip {
+      background: var(--surface-variant);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .chip:hover {
+      background: #E2E8F0;
+    }
+
+    .convo-footer {
+      display: flex;
+      gap: 10px;
+      padding: 14px 20px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border);
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 12px 18px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .chat-input:focus {
+      border-color: var(--primary);
+    }
+
+    .send-btn {
+      background: var(--primary);
+      color: #FFF;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: background 0.15s;
+    }
+
+    .send-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* ================= SCREEN 4: PROFILE & SETTINGS ================= */
+    .profile-dashboard {
+      flex: 1;
+      padding: 28px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 860px) {
+      .profile-grid {
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+    }
+
+    .profile-hero-card {
+      background: linear-gradient(135deg, #FF5A5F, #FF8A73);
+      color: #FFF;
+      padding: 24px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .profile-hero-avatar {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: #FFF;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 900;
+    }
+
+    .card-section {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .form-input, .form-select {
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-submit {
+      background: var(--primary);
+      color: #FFF;
+      border: none;
+      padding: 13px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 90, 95, 0.3);
+      transition: background 0.15s;
+    }
+
+    .btn-submit:hover {
+      background: var(--primary-dark);
+    }
+
+    /* MODALS */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 50;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #FFFFFF;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: var(--shadow-xl);
+      animation: scaleUp 0.2s ease;
+      position: relative;
+    }
+
+    /* MATCH MODAL */
+    .match-modal {
+      text-align: center;
+      background: radial-gradient(circle at top, #FFE4E6, #FFF);
+    }
+
+    .match-badge {
+      font-size: 52px;
+      animation: bounce 0.6s infinite alternate ease-in-out;
+    }
+
+    .match-title {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+
+    /* TOAST */
+    .toast {
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.95);
+      color: #FFF;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 100;
+      display: none;
+      box-shadow: var(--shadow-lg);
+      animation: fadeIn 0.2s ease;
+      text-align: center;
+      max-width: 90%;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes scaleUp {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0) scale(1); }
+      to { transform: translateY(-8px) scale(1.08); }
+    }
+
+    /* PWA Install Banner & Buttons */
+    .pwa-banner {
+      position: fixed;
+      bottom: 74px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 24px);
+      max-width: 520px;
+      background: #0F172A;
+      color: #FFFFFF;
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      z-index: 9999;
+      animation: slideUp 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    @media (min-width: 860px) {
+      .pwa-banner {
+        bottom: 24px;
+        right: 24px;
+        left: auto;
+        transform: none;
+        max-width: 440px;
+      }
+    }
+
+    .pwa-banner-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pwa-banner-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      flex-shrink: 0;
+      object-fit: cover;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .pwa-banner-text h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+      color: #FFF;
+    }
+
+    .pwa-banner-text p {
+      font-size: 11px;
+      color: #94A3B8;
+      line-height: 1.3;
+    }
+
+    .pwa-btn-install {
+      background: var(--primary);
+      color: #FFF;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .pwa-btn-install:hover {
+      background: var(--primary-dark);
+      transform: scale(1.03);
+    }
+
+    .pwa-btn-close {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+    }
+
+    .pwa-header-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--primary) 0%, #E03B42 100%);
+      color: #FFF !important;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(255, 90, 95, 0.35);
+      transition: transform 0.15s ease;
+    }
+
+    .pwa-header-btn:hover {
+      transform: scale(1.04);
+    }
+
+    /* iOS Step Guide */
+    .ios-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    .ios-step:last-child {
+      border-bottom: none;
+    }
+    .ios-step-num {
+      width: 26px;
+      height: 26px;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .ios-step-content {
+      font-size: 13px;
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-container">
+
+    <!-- DESKTOP SIDEBAR (Visible on screens >= 860px) -->
+    <aside class="desktop-sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-brand">
+          <img src="ic_rentch_logo.jpg" alt="Rentch" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect fill=\'%23FF5A5F\' width=\'100\' height=\'100\' rx=\'20\'/><text x=\'50\' y=\'65\' font-size=\'45\' font-weight=\'bold\' fill=\'white\' text-anchor=\'middle\'>R</text></svg>'">
+          <div>
+            <div class="brand-title">Rentch</div>
+            <div class="brand-badge">🇬🇪 Тбилиси</div>
+          </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="sidebar-nav">
+          <div class="sidebar-nav-item active" data-target="screen-swipe">
+            <span class="sidebar-nav-icon">🔥</span>
+            <span>Поиск квартир</span>
+          </div>
+          <div class="sidebar-nav-item" data-target="screen-map">
+            <span class="sidebar-nav-icon">🗺️</span>
+            <span>Карта Тбилиси</span>
+          </div>
+          <div class="sidebar-nav-item" data-target="screen-chats">
+            <span class="sidebar-nav-icon">💬</span>
+            <span>Диалоги</span>
+            <span class="nav-badge-pill" id="sidebar-chat-badge" style="display:none;">1</span>
+          </div>
+          <div class="sidebar-nav-item" data-target="screen-profile">
+            <span class="sidebar-nav-icon">👤</span>
+            <span>Профиль арендатора</span>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Desktop Sidebar Bottom Info & Shortcuts -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="sidebar-shortcuts-card">
+          <div class="shortcuts-title">Горячие клавиши (ПК)</div>
+          <div class="shortcut-row">
+            <span>Пропустить:</span>
+            <span class="kbd-tag">← Влево</span>
+          </div>
+          <div class="shortcut-row">
+            <span>Rentch (Лайк):</span>
+            <span class="kbd-tag">→ Вправо</span>
+          </div>
+          <div class="shortcut-row">
+            <span>Подробнее:</span>
+            <span class="kbd-tag">Пробел</span>
+          </div>
+          <div class="shortcut-row">
+            <span>Разделы:</span>
+            <span class="kbd-tag">1 – 4</span>
+          </div>
+        </div>
+
+        <div style="font-size:11px; color:var(--text-muted); text-align:center;">
+          Rentch Web & Desktop v2.4 • 🇬🇪 Tbilisi
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT STAGE -->
+    <div class="main-stage">
+
+      <!-- Mobile Top Bar (Visible on mobile screens) -->
+      <header class="mobile-top-bar">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <img src="ic_rentch_logo.jpg" alt="Rentch" style="width:34px; height:34px; border-radius:10px; object-fit:cover;" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect fill=\'%23FF5A5F\' width=\'100\' height=\'100\' rx=\'20\'/><text x=\'50\' y=\'65\' font-size=\'45\' font-weight=\'bold\' fill=\'white\' text-anchor=\'middle\'>R</text></svg>'">
+          <span style="font-size:20px; font-weight:900; color:var(--primary);">Rentch</span>
+          <span class="brand-badge">🇬🇪 Тбилиси</span>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button class="pwa-header-btn" id="pwa-install-btn-mobile" title="Установить приложение">📲 Установить</button>
+          <button class="icon-btn" id="filter-btn-mobile" title="Фильтры">⚙️</button>
+          <button class="icon-btn" id="tg-btn-mobile" title="Telegram">✈️</button>
+        </div>
+      </header>
+
+      <!-- Desktop Header (Visible on >=860px) -->
+      <header class="desktop-header">
+        <div class="header-left">
+          <div class="header-page-title" id="desktop-page-title">🔥 Поиск квартир в аренду</div>
+          <div style="font-size:12px; background:var(--surface-variant); border:1px solid var(--border); padding:4px 12px; border-radius:20px; font-weight:600; color:var(--text-muted);">
+            Все районы Тбилиси • В наличии 4 объекта
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="pwa-header-btn" id="pwa-install-btn-desktop" title="Установить приложение Rentch">
+            <span>📲 Скачать на телефон</span>
+          </button>
+          <button class="icon-btn" id="filter-btn-desktop" title="Фильтры поиска" style="width:auto; padding:0 14px; gap:6px; font-size:13px; font-weight:700;">
+            <span>⚙️ Фильтры</span>
+            <span class="badge-dot" id="filter-dot" style="display:none;"></span>
+          </button>
+          <button class="icon-btn" id="tg-btn-desktop" title="Telegram-уведомления" style="width:auto; padding:0 14px; gap:6px; font-size:13px; font-weight:700;">
+            <span>✈️ Telegram-бот</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- SCREEN 1: SWIPE (ПОИСК) -->
+      <section class="screen active" id="screen-swipe">
+        <div class="swipe-stage">
+          <div class="desktop-swipe-layout">
+            
+            <!-- Left: Card Deck -->
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <div class="deck" id="card-deck">
+                <!-- Cards injected here -->
+              </div>
+              
+              <!-- Action Buttons -->
+              <div class="controls">
+                <button class="btn-action btn-reload" id="btn-reload" title="Начать сначала (R)">🔄</button>
+                <button class="btn-action btn-nope" id="btn-nope" title="Пропустить (← Влево)">✖️</button>
+                <button class="btn-action btn-info" id="btn-info" title="Подробнее (Пробел)">ℹ️</button>
+                <button class="btn-action btn-like" id="btn-like" title="Rentch! Нравится (→ Вправо)">❤️</button>
+              </div>
+            </div>
+
+            <!-- Right: Desktop Specification Panel (Syncs with top card) -->
+            <div class="desktop-spec-panel" id="desktop-spec-panel">
+              <div class="spec-panel-title" id="panel-title">Характеристики объекта</div>
+              <div style="font-size:13px; color:var(--text-muted);" id="panel-address"></div>
+              
+              <div class="spec-grid">
+                <div class="spec-item">
+                  <div class="spec-item-label">Стоимость</div>
+                  <div class="spec-item-value" id="panel-price" style="color:var(--primary);">-</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-item-label">Район</div>
+                  <div class="spec-item-value" id="panel-district">-</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-item-label">Комнаты / Площадь</div>
+                  <div class="spec-item-value" id="panel-rooms">-</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-item-label">Этажность</div>
+                  <div class="spec-item-value" id="panel-floor">-</div>
+                </div>
+              </div>
+
+              <div style="font-size:13px; color:var(--text-main); line-height:1.5;" id="panel-desc"></div>
+
+              <div class="landlord-box">
+                <div class="landlord-avatar" id="panel-landlord-avatar">Г</div>
+                <div>
+                  <div style="font-size:11px; color:var(--text-muted); font-weight:600;">СОБСТВЕННИК</div>
+                  <div style="font-size:14px; font-weight:800;" id="panel-landlord-name">-</div>
+                  <div style="font-size:12px; color:var(--text-muted);" id="panel-landlord-phone">-</div>
+                </div>
+              </div>
+
+              <button class="btn-submit" id="panel-like-btn" style="margin-top:auto;">
+                ❤️ Это Rentch! Согласовать просмотр
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 2: MAP (КАРТА ТБИЛИСИ) -->
+      <section class="screen" id="screen-map">
+        <div class="map-split-container">
+          
+          <!-- Map Canvas -->
+          <div class="map-canvas-col">
+            <svg class="map-svg" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="600" fill="#EEF2F6"/>
+              
+              <!-- Green zones -->
+              <path d="M 40,80 Q 90,60 110,130 T 40,160 Z" fill="#D1E7DD" opacity="0.75"/>
+              <path d="M 280,300 Q 360,280 340,380 T 260,360 Z" fill="#D1E7DD" opacity="0.75"/>
+              <path d="M 80,420 Q 140,400 120,490 T 50,470 Z" fill="#D1E7DD" opacity="0.65"/>
+
+              <!-- River Kura (Mtkvari) -->
+              <path d="M 320,0 Q 260,100 240,180 T 190,300 T 170,410 T 230,520 T 280,600" 
+                    fill="none" stroke="#7DD3FC" stroke-width="28" stroke-linecap="round"/>
+              <path d="M 320,0 Q 260,100 240,180 T 190,300 T 170,410 T 230,520 T 280,600" 
+                    fill="none" stroke="#38BDF8" stroke-width="14" stroke-linecap="round"/>
+
+              <!-- Major Avenues -->
+              <path d="M 20,270 Q 100,280 190,300" fill="none" stroke="#CBD5E1" stroke-width="7"/>
+              <path d="M 190,300 Q 230,360 250,430" fill="none" stroke="#CBD5E1" stroke-width="7"/>
+              <path d="M 70,170 Q 160,200 240,180" fill="none" stroke="#CBD5E1" stroke-width="6"/>
+
+              <!-- District Labels -->
+              <text x="60" y="260" font-size="14" font-weight="bold" fill="#64748B">Ваке</text>
+              <text x="100" y="160" font-size="14" font-weight="bold" fill="#64748B">Сабуртало</text>
+              <text x="140" y="360" font-size="14" font-weight="bold" fill="#64748B">Вера</text>
+              <text x="210" y="420" font-size="14" font-weight="bold" fill="#64748B">Мтацминда</text>
+              <text x="260" y="220" font-size="14" font-weight="bold" fill="#64748B">Чугурети</text>
+              <text x="230" y="100" font-size="14" font-weight="bold" fill="#64748B">Дидубе</text>
+              <text x="270" y="520" font-size="14" font-weight="bold" fill="#64748B">Ортачала</text>
+            </svg>
+
+            <!-- Pins over SVG -->
+            <div id="map-pins"></div>
+
+            <!-- Mobile Bottom Sheet for Map -->
+            <div class="map-sheet-mobile" id="map-sheet-mobile">
+              <img src="" id="map-mobile-img" style="width:76px; height:76px; border-radius:12px; object-fit:cover;" alt="Квартира">
+              <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="font-weight:800; font-size:16px; color:var(--primary);" id="map-mobile-price"></div>
+                  <div style="font-weight:700; font-size:13px;" id="map-mobile-title"></div>
+                </div>
+                <button class="booking-btn" id="map-mobile-chat-btn" style="padding:6px 12px; font-size:12px;">
+                  💬 Открыть диалог
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desktop Sidebar for Map (List of objects & active details) -->
+          <div class="map-sidebar-col">
+            <div style="font-size:16px; font-weight:800;">Квартиры на карте Тбилиси</div>
+            <div style="font-size:12px; color:var(--text-muted);">Кликните на пин или карточку для перехода:</div>
+            
+            <div id="map-desktop-list" style="display:flex; flex-direction:column; gap:12px;">
+              <!-- Cards injected here -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SCREEN 3: CHATS (ДИАЛОГИ И БРОНИРОВАНИЕ) -->
+      <section class="screen" id="screen-chats">
+        <div class="chats-layout">
+          
+          <!-- Conversations List (Left) -->
+          <div class="chats-inbox">
+            <div style="padding:16px 18px; border-bottom:1px solid var(--border); font-weight:800; font-size:16px;">
+              Ваши диалоги
+            </div>
+            <div id="chat-list" style="flex:1; overflow-y:auto;">
+              <!-- Injected chats -->
+            </div>
+          </div>
+
+          <!-- Active Conversation Thread (Right) -->
+          <div class="chat-thread-col">
+            
+            <div class="convo-header">
+              <img src="" id="convo-avatar" class="chat-avatar" alt="Собственник">
+              <div style="flex:1;">
+                <div style="font-weight:800; font-size:15px;" id="convo-name">Георгий (Ваке)</div>
+                <div style="font-size:12px; color:var(--success); font-weight:600;" id="convo-status">В сети • Бот-консьерж Rentch готов к согласованию</div>
+              </div>
+            </div>
+
+            <div class="convo-body" id="convo-body">
+              <!-- Messages -->
+            </div>
+
+            <!-- Quick prompt chips -->
+            <div class="chips-row">
+              <div class="chip" data-text="Включены ли коммунальные услуги?">💡 КУ включены?</div>
+              <div class="chip" data-text="Какой размер залога (депозита)?">💰 Залог</div>
+              <div class="chip" data-text="Скорость интернета для удаленной работы?">🚀 Интернет</div>
+              <div class="chip" data-text="Когда можно заехать в квартиру?">📅 Дата заезда</div>
+            </div>
+
+            <!-- Footer Message Input -->
+            <div class="convo-footer">
+              <input type="text" class="chat-input" id="chat-input" placeholder="Напишите сообщение собственнику или боту...">
+              <button class="send-btn" id="chat-send-btn">➤</button>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SCREEN 4: PROFILE & QUESTIONNAIRE (АНКЕТА) -->
+      <section class="screen" id="screen-profile">
+        <div class="profile-dashboard">
+          
+          <!-- Hero Banner -->
+          <div class="profile-hero-card">
+            <div class="profile-hero-avatar" id="avatar-initial">И</div>
+            <div>
+              <div style="font-size:22px; font-weight:900;" id="profile-display-name">Игорь</div>
+              <div style="font-size:14px; opacity:0.9;" id="profile-display-phone">+995 599 123 456</div>
+              <div style="font-size:12px; margin-top:6px; background:rgba(255,255,255,0.25); padding:3px 10px; border-radius:12px; display:inline-block; font-weight:700;">
+                ✅ Анкета арендатора активна
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-grid">
+            
+            <!-- Left: Tenant Questionnaire Form -->
+            <div class="card-section">
+              <div class="section-title">📋 Опросник арендатора</div>
+              <p style="font-size:13px; color:var(--text-muted); line-height:1.4;">
+                Заполненная анкета позволяет собственникам квартир в Тбилиси сразу одобрять просмотры без долгих расспросов:
+              </p>
+
+              <div class="form-group">
+                <label class="form-label">Ваше имя</label>
+                <input type="text" class="form-input" id="q-name" value="Игорь">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Контактный телефон (+995 ...)</label>
+                <input type="text" class="form-input" id="q-phone" value="+995 599 123 456">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Желаемый срок аренды</label>
+                <select class="form-select" id="q-period">
+                  <option value="На месяц">На 1 месяц</option>
+                  <option value="От месяца до года" selected>От месяца до года</option>
+                  <option value="От года">От года и более</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Количество проживающих</label>
+                <select class="form-select" id="q-tenants">
+                  <option value="1">1 человек</option>
+                  <option value="2" selected>2 человека</option>
+                  <option value="3">3 человека</option>
+                  <option value="4">4+ человека</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Домашние животные</label>
+                <select class="form-select" id="q-pets">
+                  <option value="none">Нет животных</option>
+                  <option value="cat" selected>Кошка</option>
+                  <option value="dog">Собака</option>
+                  <option value="other">Другие питомцы</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Приоритетный район Тбилиси</label>
+                <select class="form-select" id="q-district">
+                  <option value="Все районы">Все районы</option>
+                  <option value="Ваке" selected>Ваке</option>
+                  <option value="Сабуртало">Сабуртало</option>
+                  <option value="Вера">Вера</option>
+                  <option value="Мтацминда">Мтацминда</option>
+                  <option value="Чугурети">Чугурети</option>
+                  <option value="Дидубе">Дидубе</option>
+                  <option value="Ортачала">Ортачала</option>
+                </select>
+              </div>
+
+              <button class="btn-submit" id="save-profile-btn">💾 Сохранить анкету</button>
+            </div>
+
+            <!-- Right: Telegram Bot & Preferences -->
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <div class="card-section">
+                <div class="section-title">✈️ Telegram-уведомления</div>
+                <p style="font-size:13px; color:var(--text-muted); line-height:1.4;">
+                  Получайте моментальные оповещения о совпадениях («Rentch!») и подтверждениях показов прямо в мессенджер:
+                </p>
+
+                <div class="form-group">
+                  <label class="form-label">Ваш Telegram (@username или ID)</label>
+                  <input type="text" class="form-input" id="tg-chat-id" value="@rentch_tbilisi_alerts">
+                </div>
+
+                <div style="font-size:13px; color:var(--success); font-weight:700;">
+                  ● Бот подключен (@RentchTbilisiBot)
+                </div>
+
+                <button class="btn-submit" id="tg-test-btn" style="background:#0284C7;">
+                  🔔 Отправить тестовое оповещение
+                </button>
+              </div>
+
+              <div class="card-section">
+                <div class="section-title">💡 Как работает Rentch</div>
+                <div style="font-size:13px; color:var(--text-muted); line-height:1.5;">
+                  1. Свайпайте вправо карточки понравившихся квартир.<br>
+                  2. При совпадении («Rentch!») бот-консьерж открывает диалог с собственником.<br>
+                  3. Согласуйте удобный просмотр в один клик без звонков и посредников.
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="bottom-bar">
+      <div class="nav-item active" data-target="screen-swipe">
+        <span class="nav-icon">🔥</span>
+        <span>Поиск</span>
+      </div>
+      <div class="nav-item" data-target="screen-map">
+        <span class="nav-icon">🗺️</span>
+        <span>Карта</span>
+      </div>
+      <div class="nav-item" data-target="screen-chats">
+        <span class="nav-icon">💬</span>
+        <span>Диалоги</span>
+      </div>
+      <div class="nav-item" data-target="screen-profile">
+        <span class="nav-icon">👤</span>
+        <span>Профиль</span>
+      </div>
+    </nav>
+
+    <!-- MODAL: MATCH CELEBRATION ("RENTCH!") -->
+    <div class="modal-overlay" id="match-modal">
+      <div class="modal-box match-modal">
+        <div class="match-badge">🎉 ❤️ 🥂</div>
+        <div class="match-title">Это Rentch!</div>
+        <p style="font-size:14px; color:var(--text-muted);" id="match-modal-desc">
+          Вы и собственник квартиры совпали! Консьерж-бот готов согласовать время просмотра.
+        </p>
+        <img src="" id="match-modal-img" style="width:100%; height:180px; object-fit:cover; border-radius:16px; margin:4px 0;" alt="Квартира">
+        <div style="font-weight:800; font-size:20px; color:var(--primary);" id="match-modal-price"></div>
+        <button class="btn-submit" id="match-chat-btn" style="margin-top:8px;">
+          💬 Написать собственнику
+        </button>
+        <button class="icon-btn" id="match-close-btn" style="margin: 0 auto; width:auto; padding:8px 18px; border-radius:12px; font-size:13px; font-weight:700; border:none; color:var(--text-muted);">
+          Продолжить поиск
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL: DETAILS -->
+    <div class="modal-overlay" id="details-modal">
+      <div class="modal-box">
+        <button class="icon-btn" id="details-close-btn" style="position:absolute; top:16px; right:16px; width:32px; height:32px;">✕</button>
+        <img src="" id="detail-img" style="width:100%; height:200px; object-fit:cover; border-radius:18px;" alt="Фото">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-size:24px; font-weight:800; color:var(--primary);" id="detail-price"></div>
+          <div style="font-size:13px; background:var(--surface-variant); padding:4px 12px; border-radius:12px; font-weight:700;" id="detail-district"></div>
+        </div>
+        <div style="font-size:20px; font-weight:800;" id="detail-title"></div>
+        <div style="font-size:13px; color:var(--text-muted);" id="detail-address"></div>
+        
+        <div class="card-tags" id="detail-tags"></div>
+
+        <div style="font-size:13px; color:var(--text-main); line-height:1.5;" id="detail-desc"></div>
+
+        <div style="background:var(--surface-variant); padding:14px; border-radius:14px;">
+          <div style="font-size:11px; color:var(--text-muted); font-weight:700;">СОБСТВЕННИК</div>
+          <div style="font-weight:800; font-size:15px;" id="detail-landlord"></div>
+          <div style="font-size:13px; color:var(--text-muted);" id="detail-phone"></div>
+        </div>
+
+        <button class="btn-submit" id="detail-like-btn">❤️ Это Rentch! Нравится</button>
+      </div>
+    </div>
+
+    <!-- MODAL: FILTERS -->
+    <div class="modal-overlay" id="filter-modal">
+      <div class="modal-box">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-size:20px; font-weight:800;">Фильтры поиска</div>
+          <button class="icon-btn" id="filter-close-btn" style="width:32px; height:32px;">✕</button>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Максимальный бюджет: <span id="budget-val" style="font-weight:800; color:var(--primary);">$1500</span></label>
+          <input type="range" min="300" max="3000" step="50" value="1500" id="filter-budget" style="width:100%; accent-color:var(--primary);">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Район Тбилиси</label>
+          <select class="form-select" id="filter-district">
+            <option value="Все районы">Все районы</option>
+            <option value="Ваке">Ваке</option>
+            <option value="Сабуртало">Сабуртало</option>
+            <option value="Вера">Вера</option>
+            <option value="Мтацминда">Мтацминда</option>
+            <option value="Чугурети">Чугурети</option>
+            <option value="Дидубе">Дидубе</option>
+            <option value="Ортачала">Ортачала</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Наличие мебели</label>
+          <select class="form-select" id="filter-furniture">
+            <option value="ANY">Любая</option>
+            <option value="WITH">Только с мебелью</option>
+            <option value="WITHOUT">Без мебели</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="flex-direction:row; align-items:center; justify-content:space-between;">
+          <label class="form-label" style="margin:0;">🐶 Разрешены домашние животные</label>
+          <input type="checkbox" id="filter-pets" style="width:20px; height:20px; accent-color:var(--primary);">
+        </div>
+
+        <button class="btn-submit" id="apply-filters-btn">Применить фильтры</button>
+      </div>
+    </div>
+
+    <!-- PWA INSTALL BANNER -->
+    <div class="pwa-banner" id="pwa-install-banner">
+      <div class="pwa-banner-content">
+        <img src="icon-192.png" alt="Rentch Logo" class="pwa-banner-icon" onerror="this.src='ic_rentch_logo.jpg'">
+        <div class="pwa-banner-text">
+          <h4>Установить Rentch на телефон</h4>
+          <p>Быстрый поиск квартир в Тбилиси без очередей и посредников</p>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="pwa-btn-install" id="pwa-banner-action-btn">Установить</button>
+        <button class="pwa-btn-close" id="pwa-banner-close-btn" title="Закрыть">✕</button>
+      </div>
+    </div>
+
+    <!-- MODAL: iOS INSTALL GUIDE -->
+    <div class="modal-overlay" id="pwa-ios-modal">
+      <div class="modal-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img src="icon-192.png" alt="Rentch" style="width:36px; height:36px; border-radius:10px;" onerror="this.src='ic_rentch_logo.jpg'">
+            <div>
+              <div style="font-size:18px; font-weight:800; color:var(--text-main);">Установка на iPhone</div>
+              <div style="font-size:12px; color:var(--text-muted);">Safari • Без App Store</div>
+            </div>
+          </div>
+          <button class="icon-btn" id="pwa-ios-close-btn" style="width:32px; height:32px;">✕</button>
+        </div>
+
+        <div style="margin-top:12px; display:flex; flex-direction:column; gap:4px;">
+          <div class="ios-step">
+            <div class="ios-step-num">1</div>
+            <div class="ios-step-content">
+              Нажмите кнопку <strong>«Поделиться»</strong> <span style="display:inline-block; border:1px solid #CBD5E1; padding:1px 6px; border-radius:6px; font-size:12px;">⎋</span> на панели внизу Safari.
+            </div>
+          </div>
+          <div class="ios-step">
+            <div class="ios-step-num">2</div>
+            <div class="ios-step-content">
+              Прокрутите меню вниз и выберите <strong>«На экран „Домой“»</strong> <span style="font-size:14px;">➕</span>.
+            </div>
+          </div>
+          <div class="ios-step">
+            <div class="ios-step-num">3</div>
+            <div class="ios-step-content">
+              В правом верхнем углу нажмите <strong>«Добавить»</strong>. Иконка Rentch появится на вашем рабочем столе!
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-submit" id="pwa-ios-done-btn" style="margin-top:16px;">Понятно, спасибо!</button>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+  </div>
+
+  <script>
+    // --- APARTMENTS DATA ---
+    const APARTMENTS = [
+      {
+        id: 1,
+        title: "Современная 2-комн. в центре Ваке",
+        district: "Ваке",
+        address: "Проспект Чавчавадзе, 24",
+        priceUsd: 950,
+        rooms: 2,
+        areaSqM: 68,
+        floor: "7/12",
+        hasFurniture: true,
+        petsAllowed: true,
+        minPeriod: "От месяца до года",
+        maxTenants: 3,
+        image: "img_apt_vake.jpg",
+        description: "Светлая просторная квартира с новым дизайнерским ремонтом. Панорамные окна с видом на парк Ваке, балкон, тихий двор. Вся мебель и техника премиум-класса, посудомоечная машина, духовка, скоростной интернет 100 Мбит/с.",
+        features: ["Кондиционер", "Балкон", "Посудомойка", "Паркинг", "Парк Ваке рядом"],
+        landlordName: "Георгий",
+        landlordPhone: "+995 555 12 34 56",
+        mapX: 70,
+        mapY: 280
+      },
+      {
+        id: 2,
+        title: "Уютная студия возле метро Делиси",
+        district: "Сабуртало",
+        address: "Улица Важа-Пшавела, 45",
+        priceUsd: 650,
+        rooms: 1,
+        areaSqM: 42,
+        floor: "4/9",
+        hasFurniture: true,
+        petsAllowed: false,
+        minPeriod: "От 1 месяца",
+        maxTenants: 2,
+        image: "img_apt_saburtalo.jpg",
+        description: "Стильная квартира-студия с функциональным зонированием. 3 минуты пешком до станции метро Делиси. Рядом City Mall, кафе, круглосуточные супермаркеты. Идеально для удаленной работы.",
+        features: ["Метро 3 мин", "Смарт ТВ", "Рабочее место", "Стиральная машина"],
+        landlordName: "Нино",
+        landlordPhone: "+995 577 98 76 54",
+        mapX: 110,
+        mapY: 180
+      },
+      {
+        id: 3,
+        title: "Видовая квартира в исторической Вере",
+        district: "Вера",
+        address: "Улица Барнова, 18",
+        priceUsd: 1100,
+        rooms: 3,
+        areaSqM: 85,
+        floor: "3/5",
+        hasFurniture: true,
+        petsAllowed: true,
+        minPeriod: "От года",
+        maxTenants: 4,
+        image: "img_apt_vera.jpg",
+        description: "Атмосферное жилье в колоритном тбилисском доме с высокими потолками 3.8м и аутентичным деревянным балконом. Вид на Мтацминду, тихая зеленая улица в 5 минутах от площади Руставели и Rooms Hotel.",
+        features: ["Высокие потолки", "Аутентичный балкон", "Вид на гору", "Rooms Hotel 5 мин"],
+        landlordName: "Давид",
+        landlordPhone: "+995 599 44 55 66",
+        mapX: 150,
+        mapY: 370
+      },
+      {
+        id: 4,
+        title: "Лофт с панорамой у фуникулера Мтацминда",
+        district: "Мтацминда",
+        address: "Улица Чонкадзе, 12",
+        priceUsd: 1350,
+        rooms: 3,
+        areaSqM: 92,
+        floor: "5/6",
+        hasFurniture: true,
+        petsAllowed: true,
+        minPeriod: "От месяца до года",
+        maxTenants: 4,
+        image: "img_apt_mtatsminda.jpg",
+        description: "Эксклюзивный лофт с террасой и захватывающим видом на весь старый Тбилиси. Камин, автономное отопление, просторная гостиная, подземный паркинг. Можно с воспитанными питомцами.",
+        features: ["Панорамная терраса", "Камин", "Паркинг", "Pet-friendly"],
+        landlordName: "Тамара",
+        landlordPhone: "+995 593 11 22 88",
+        mapX: 220,
+        mapY: 430
+      }
+    ];
+
+    // --- STATE ---
+    let state = {
+      apartments: [...APARTMENTS],
+      currentIndex: 0,
+      likedApartments: [],
+      chats: [
+        {
+          aptId: 1,
+          messages: [
+            { sender: 'bot', text: 'Здравствуйте! Рад знакомству. Я консьерж-бот сервиса Rentch.' },
+            { sender: 'bot', text: 'Собственник Георгий подтвердил совпадение (Rentch!) и готов показать вам квартиру в Ваке.' }
+          ],
+          viewingStatus: 'pending',
+          viewingDate: 'Завтра в 18:00'
+        }
+      ],
+      currentChatId: 1,
+      filters: {
+        maxBudget: 2000,
+        district: 'Все районы',
+        furniture: 'ANY',
+        petsOnly: false
+      },
+      profile: {
+        name: 'Игорь',
+        phone: '+995 599 123 456',
+        period: 'От месяца до года',
+        tenants: '2',
+        pets: 'cat',
+        district: 'Ваке'
+      }
+    };
+
+    try {
+      const savedProfile = localStorage.getItem('rentch_profile');
+      if (savedProfile) state.profile = JSON.parse(savedProfile);
+      const savedLikes = localStorage.getItem('rentch_likes');
+      if (savedLikes) state.likedApartments = JSON.parse(savedLikes);
+    } catch(e) {}
+
+    // --- DOM REFERENCES ---
+    const deckEl = document.getElementById('card-deck');
+    const toastEl = document.getElementById('toast');
+    const pageTitleEl = document.getElementById('desktop-page-title');
+
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      setTimeout(() => { toastEl.style.display = 'none'; }, 2600);
+    }
+
+    // --- NAVIGATION (Sidebar & Mobile Bar) ---
+    function switchTab(targetId) {
+      document.querySelectorAll('.sidebar-nav-item').forEach(i => {
+        i.classList.toggle('active', i.getAttribute('data-target') === targetId);
+      });
+      document.querySelectorAll('.nav-item').forEach(i => {
+        i.classList.toggle('active', i.getAttribute('data-target') === targetId);
+      });
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const activeScreen = document.getElementById(targetId);
+      if (activeScreen) activeScreen.classList.add('active');
+
+      const titles = {
+        'screen-swipe': '🔥 Поиск квартир в аренду (Тбилиси)',
+        'screen-map': '🗺️ Интерактивная карта объектов Тбилиси',
+        'screen-chats': '💬 Диалоги и согласование просмотров',
+        'screen-profile': '👤 Анкета арендатора и настройки'
+      };
+      if (pageTitleEl && titles[targetId]) {
+        pageTitleEl.textContent = titles[targetId];
+      }
+
+      if (targetId === 'screen-map') {
+        renderMapPins();
+        renderMapDesktopList();
+      }
+      if (targetId === 'screen-chats') {
+        renderChatsList();
+        openChatForApartment(state.currentChatId);
+      }
+    }
+
+    document.querySelectorAll('.sidebar-nav-item, .nav-item').forEach(el => {
+      el.addEventListener('click', () => {
+        switchTab(el.getAttribute('data-target'));
+      });
+    });
+
+    // --- KEYBOARD SHORTCUTS FOR COMPUTERS ---
+    window.addEventListener('keydown', (e) => {
+      // Don't trigger if user is typing in an input
+      if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+      if (e.key === 'ArrowLeft') {
+        const filtered = getFilteredApartments();
+        if (state.currentIndex < filtered.length) {
+          triggerSwipeAction(null, filtered[state.currentIndex], 'left');
+        }
+      } else if (e.key === 'ArrowRight') {
+        const filtered = getFilteredApartments();
+        if (state.currentIndex < filtered.length) {
+          triggerSwipeAction(null, filtered[state.currentIndex], 'right');
+        }
+      } else if (e.key === ' ' || e.key === 'i' || e.key === 'I') {
+        e.preventDefault();
+        const filtered = getFilteredApartments();
+        if (state.currentIndex < filtered.length) {
+          showDetailsModal(filtered[state.currentIndex]);
+        }
+      } else if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+      } else if (e.key === '1') switchTab('screen-swipe');
+      else if (e.key === '2') switchTab('screen-map');
+      else if (e.key === '3') switchTab('screen-chats');
+      else if (e.key === '4') switchTab('screen-profile');
+    });
+
+    // --- SWIPE LOGIC ---
+    function renderDeck() {
+      deckEl.innerHTML = '';
+      const filtered = getFilteredApartments();
+
+      if (state.currentIndex >= filtered.length) {
+        deckEl.innerHTML = `
+          <div style="text-align:center; padding:32px; background:#FFF; border-radius:24px; box-shadow:var(--shadow-md); width:100%;">
+            <div style="font-size:52px;">✨</div>
+            <div style="font-size:20px; font-weight:800; margin:12px 0;">Все квартиры просмотрены</div>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">
+              Вы просмотрели все предложения в Тбилиси.
+            </p>
+            <button class="btn-submit" onclick="resetDeck()">Начать сначала (R)</button>
+          </div>
+        `;
+        updateDesktopSpecPanel(null);
+        return;
+      }
+
+      const currentApt = filtered[state.currentIndex];
+      updateDesktopSpecPanel(currentApt);
+
+      for (let i = Math.min(state.currentIndex + 1, filtered.length - 1); i >= state.currentIndex; i--) {
+        const apt = filtered[i];
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.id = apt.id;
+        if (i > state.currentIndex) {
+          card.style.transform = 'scale(0.95) translateY(14px)';
+          card.style.opacity = '0.7';
+          card.style.pointerEvents = 'none';
+        }
+
+        card.innerHTML = `
+          <div class="card-photo-box">
+            <img src="${apt.image}" class="card-img" alt="${apt.title}" onerror="this.src='https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600'">
+            <div class="card-district-badge">${apt.district}</div>
+            <div class="card-price-badge">$${apt.priceUsd} <span style="font-size:13px; font-weight:500;">/мес</span></div>
+            <div class="stamp rentch">RENTCH! ❤️</div>
+            <div class="stamp nope">NOPE ✖️</div>
+          </div>
+          <div class="card-info">
+            <div class="card-title-row">
+              <div>
+                <div class="card-title">${apt.title}</div>
+                <div class="card-address">📍 ${apt.address}</div>
+              </div>
+            </div>
+            <div class="card-tags">
+              <span class="tag">📐 ${apt.areaSqM} м²</span>
+              <span class="tag">🚪 ${apt.rooms} комн.</span>
+              <span class="tag">🏢 ${apt.floor} эт.</span>
+              ${apt.hasFurniture ? '<span class="tag highlight">🛋️ С мебелью</span>' : ''}
+              ${apt.petsAllowed ? '<span class="tag highlight">🐾 С питомцами</span>' : ''}
+            </div>
+            <div class="card-desc">${apt.description}</div>
+          </div>
+        `;
+
+        if (i === state.currentIndex) {
+          attachSwipeEvents(card, apt);
+        }
+
+        deckEl.appendChild(card);
+      }
+    }
+
+    function updateDesktopSpecPanel(apt) {
+      const panel = document.getElementById('desktop-spec-panel');
+      if (!panel) return;
+
+      if (!apt) {
+        document.getElementById('panel-title').textContent = 'Поиск завершен';
+        document.getElementById('panel-address').textContent = 'Нет доступных объектов';
+        document.getElementById('panel-price').textContent = '-';
+        document.getElementById('panel-district').textContent = '-';
+        document.getElementById('panel-rooms').textContent = '-';
+        document.getElementById('panel-floor').textContent = '-';
+        document.getElementById('panel-desc').textContent = 'Нажмите кнопку сброса, чтобы посмотреть заново.';
+        document.getElementById('panel-landlord-name').textContent = '-';
+        document.getElementById('panel-landlord-phone').textContent = '-';
+        return;
+      }
+
+      document.getElementById('panel-title').textContent = apt.title;
+      document.getElementById('panel-address').textContent = `📍 ${apt.address}`;
+      document.getElementById('panel-price').textContent = `$${apt.priceUsd} / мес`;
+      document.getElementById('panel-district').textContent = apt.district;
+      document.getElementById('panel-rooms').textContent = `${apt.rooms} комн. (${apt.areaSqM} м²)`;
+      document.getElementById('panel-floor').textContent = apt.floor;
+      document.getElementById('panel-desc').textContent = apt.description;
+      document.getElementById('panel-landlord-avatar').textContent = apt.landlordName[0] || 'С';
+      document.getElementById('panel-landlord-name').textContent = apt.landlordName;
+      document.getElementById('panel-landlord-phone').textContent = apt.landlordPhone;
+
+      document.getElementById('panel-like-btn').onclick = () => {
+        triggerSwipeAction(null, apt, 'right');
+      };
+    }
+
+    function getFilteredApartments() {
+      return state.apartments.filter(apt => {
+        if (apt.priceUsd > state.filters.maxBudget) return false;
+        if (state.filters.district !== 'Все районы' && apt.district !== state.filters.district) return false;
+        if (state.filters.furniture === 'WITH' && !apt.hasFurniture) return false;
+        if (state.filters.furniture === 'WITHOUT' && apt.hasFurniture) return false;
+        if (state.filters.petsOnly && !apt.petsAllowed) return false;
+        return true;
+      });
+    }
+
+    function resetDeck() {
+      state.currentIndex = 0;
+      renderDeck();
+      showToast('Колода сброшена к началу!');
+    }
+
+    function attachSwipeEvents(card, apt) {
+      let startX = 0;
+      let startY = 0;
+      let currentX = 0;
+      let currentY = 0;
+      let isDragging = false;
+
+      const rentchStamp = card.querySelector('.stamp.rentch');
+      const nopeStamp = card.querySelector('.stamp.nope');
+
+      function onStart(e) {
+        isDragging = true;
+        startX = e.clientX || (e.touches && e.touches[0].clientX);
+        startY = e.clientY || (e.touches && e.touches[0].clientY);
+        card.style.transition = 'none';
+      }
+
+      function onMove(e) {
+        if (!isDragging) return;
+        currentX = (e.clientX || (e.touches && e.touches[0].clientX)) - startX;
+        currentY = (e.clientY || (e.touches && e.touches[0].clientY)) - startY;
+
+        const rotate = currentX * 0.08;
+        card.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotate}deg)`;
+
+        if (currentX > 20) {
+          rentchStamp.style.opacity = Math.min(1, currentX / 100);
+          nopeStamp.style.opacity = 0;
+        } else if (currentX < -20) {
+          nopeStamp.style.opacity = Math.min(1, Math.abs(currentX) / 100);
+          rentchStamp.style.opacity = 0;
+        } else {
+          rentchStamp.style.opacity = 0;
+          nopeStamp.style.opacity = 0;
+        }
+      }
+
+      function onEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        card.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+
+        if (currentX > 110) {
+          triggerSwipeAction(card, apt, 'right');
+        } else if (currentX < -110) {
+          triggerSwipeAction(card, apt, 'left');
+        } else {
+          card.style.transform = 'translate(0, 0) rotate(0deg)';
+          rentchStamp.style.opacity = 0;
+          nopeStamp.style.opacity = 0;
+        }
+      }
+
+      card.addEventListener('mousedown', onStart);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onEnd);
+
+      card.addEventListener('touchstart', onStart, { passive: true });
+      window.addEventListener('touchmove', onMove, { passive: true });
+      window.addEventListener('touchend', onEnd);
+    }
+
+    function triggerSwipeAction(card, apt, direction) {
+      const cardEl = card || deckEl.querySelector('.card:last-child');
+      if (!cardEl) return;
+
+      const flyX = direction === 'right' ? 600 : -600;
+      const flyRotate = direction === 'right' ? 30 : -30;
+
+      cardEl.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
+      cardEl.style.transform = `translate(${flyX}px, 0) rotate(${flyRotate}deg)`;
+      cardEl.style.opacity = '0';
+
+      setTimeout(() => {
+        state.currentIndex++;
+        if (direction === 'right') {
+          handleLike(apt);
+        }
+        renderDeck();
+      }, 300);
+    }
+
+    function handleLike(apt) {
+      if (!state.likedApartments.includes(apt.id)) {
+        state.likedApartments.push(apt.id);
+        try { localStorage.setItem('rentch_likes', JSON.stringify(state.likedApartments)); } catch(e) {}
+      }
+
+      // Update sidebar chat badge
+      const badge = document.getElementById('sidebar-chat-badge');
+      if (badge) {
+        badge.textContent = state.likedApartments.length;
+        badge.style.display = 'inline-block';
+      }
+
+      let existingChat = state.chats.find(c => c.aptId === apt.id);
+      if (!existingChat) {
+        state.chats.push({
+          aptId: apt.id,
+          messages: [
+            { sender: 'bot', text: `Здравствуйте, ${state.profile.name || 'гость'}! Я консьерж Rentch.` },
+            { sender: 'bot', text: `Собственник ${apt.landlordName} получил ваш интерес к квартире в ${apt.district} ($${apt.priceUsd}). Давайте согласуем просмотр!` }
+          ],
+          viewingStatus: 'pending',
+          viewingDate: 'Завтра в 17:30'
+        });
+      }
+
+      showMatchModal(apt);
+    }
+
+    function showMatchModal(apt) {
+      document.getElementById('match-modal-img').src = apt.image;
+      document.getElementById('match-modal-price').textContent = `$${apt.priceUsd} / месяц • ${apt.district}`;
+      document.getElementById('match-modal-desc').textContent = 
+        `Вы понравились собственнику ${apt.landlordName}! Консьерж-бот готов согласовать удобное время просмотра в Тбилиси.`;
+      
+      const modal = document.getElementById('match-modal');
+      modal.classList.add('open');
+
+      document.getElementById('match-chat-btn').onclick = () => {
+        modal.classList.remove('open');
+        switchTab('screen-chats');
+        openChatForApartment(apt.id);
+      };
+      document.getElementById('match-close-btn').onclick = () => {
+        modal.classList.remove('open');
+      };
+    }
+
+    // Button controls
+    document.getElementById('btn-nope').addEventListener('click', () => {
+      const filtered = getFilteredApartments();
+      if (state.currentIndex < filtered.length) {
+        triggerSwipeAction(null, filtered[state.currentIndex], 'left');
+      }
+    });
+
+    document.getElementById('btn-like').addEventListener('click', () => {
+      const filtered = getFilteredApartments();
+      if (state.currentIndex < filtered.length) {
+        triggerSwipeAction(null, filtered[state.currentIndex], 'right');
+      }
+    });
+
+    document.getElementById('btn-reload').addEventListener('click', resetDeck);
+
+    document.getElementById('btn-info').addEventListener('click', () => {
+      const filtered = getFilteredApartments();
+      if (state.currentIndex < filtered.length) {
+        showDetailsModal(filtered[state.currentIndex]);
+      }
+    });
+
+    // --- DETAILS MODAL ---
+    function showDetailsModal(apt) {
+      document.getElementById('detail-img').src = apt.image;
+      document.getElementById('detail-price').textContent = `$${apt.priceUsd} / мес`;
+      document.getElementById('detail-district').textContent = apt.district;
+      document.getElementById('detail-title').textContent = apt.title;
+      document.getElementById('detail-address').textContent = `📍 ${apt.address}`;
+      document.getElementById('detail-desc').textContent = apt.description;
+      document.getElementById('detail-landlord').textContent = apt.landlordName;
+      document.getElementById('detail-phone').textContent = `📞 ${apt.landlordPhone}`;
+
+      const tagsEl = document.getElementById('detail-tags');
+      tagsEl.innerHTML = `
+        <span class="tag">📐 ${apt.areaSqM} м²</span>
+        <span class="tag">🚪 ${apt.rooms} комн.</span>
+        <span class="tag">🏢 ${apt.floor} этаж</span>
+        <span class="tag">⏳ ${apt.minPeriod}</span>
+        ${apt.hasFurniture ? '<span class="tag highlight">🛋️ Мебель есть</span>' : '<span class="tag">🛋️ Без мебели</span>'}
+        ${apt.petsAllowed ? '<span class="tag highlight">🐾 С животными</span>' : '<span class="tag">🚫 Без животных</span>'}
+      `;
+
+      const modal = document.getElementById('details-modal');
+      modal.classList.add('open');
+
+      document.getElementById('details-close-btn').onclick = () => modal.classList.remove('open');
+      document.getElementById('detail-like-btn').onclick = () => {
+        modal.classList.remove('open');
+        triggerSwipeAction(null, apt, 'right');
+      };
+    }
+
+    // --- MAP SCREEN (DESKTOP & MOBILE) ---
+    function renderMapPins() {
+      const pinsContainer = document.getElementById('map-pins');
+      pinsContainer.innerHTML = '';
+
+      APARTMENTS.forEach(apt => {
+        const pin = document.createElement('div');
+        pin.className = 'map-marker';
+        pin.style.left = `${apt.mapX}px`;
+        pin.style.top = `${apt.mapY}px`;
+        pin.innerHTML = `🏠 $${apt.priceUsd}`;
+
+        pin.addEventListener('click', () => {
+          document.querySelectorAll('.map-marker').forEach(p => p.classList.remove('active'));
+          pin.classList.add('active');
+
+          // Highlight desktop list card if visible
+          document.querySelectorAll('.map-apt-card').forEach(c => {
+            c.classList.toggle('selected', parseInt(c.dataset.id) === apt.id);
+          });
+
+          // Mobile sheet
+          const sheet = document.getElementById('map-sheet-mobile');
+          document.getElementById('map-mobile-img').src = apt.image;
+          document.getElementById('map-mobile-price').textContent = `$${apt.priceUsd} / мес`;
+          document.getElementById('map-mobile-title').textContent = `${apt.district}, ${apt.title}`;
+          sheet.style.display = 'flex';
+
+          document.getElementById('map-mobile-chat-btn').onclick = () => {
+            handleLike(apt);
+            switchTab('screen-chats');
+            openChatForApartment(apt.id);
+          };
+        });
+
+        pinsContainer.appendChild(pin);
+      });
+    }
+
+    function renderMapDesktopList() {
+      const list = document.getElementById('map-desktop-list');
+      if (!list) return;
+      list.innerHTML = '';
+
+      APARTMENTS.forEach(apt => {
+        const card = document.createElement('div');
+        card.className = 'map-apt-card';
+        card.dataset.id = apt.id;
+        card.innerHTML = `
+          <img src="${apt.image}" class="map-apt-thumb" alt="${apt.title}" onerror="this.src='https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600'">
+          <div style="padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-weight:800; font-size:16px; color:var(--primary);">$${apt.priceUsd} / мес</span>
+              <span class="brand-badge">${apt.district}</span>
+            </div>
+            <div style="font-weight:700; font-size:13px; margin:4px 0;">${apt.title}</div>
+            <div style="font-size:11px; color:var(--text-muted);">${apt.address}</div>
+            <button class="booking-btn" style="margin-top:10px; width:100%; font-size:12px; padding:7px;">
+              💬 Написать собственнику
+            </button>
+          </div>
+        `;
+
+        card.querySelector('button').addEventListener('click', (e) => {
+          e.stopPropagation();
+          handleLike(apt);
+          switchTab('screen-chats');
+          openChatForApartment(apt.id);
+        });
+
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.map-apt-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          // Highlight pin
+          document.querySelectorAll('.map-marker').forEach(p => {
+            p.classList.toggle('active', p.textContent.includes(apt.priceUsd));
+          });
+        });
+
+        list.appendChild(card);
+      });
+    }
+
+    // --- CHATS SCREEN ---
+    function renderChatsList() {
+      const listEl = document.getElementById('chat-list');
+      listEl.innerHTML = '';
+
+      state.chats.forEach(chat => {
+        const apt = APARTMENTS.find(a => a.id === chat.aptId);
+        if (!apt) return;
+
+        const lastMsg = chat.messages[chat.messages.length - 1];
+        const item = document.createElement('div');
+        item.className = `chat-item ${chat.aptId === state.currentChatId ? 'active' : ''}`;
+        item.innerHTML = `
+          <img src="${apt.image}" class="chat-avatar" alt="Квартира">
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; justify-content:space-between; font-weight:700; font-size:14px;">
+              <span>${apt.landlordName} (${apt.district})</span>
+              <span style="font-size:11px; color:var(--text-muted); font-weight:normal;">Сейчас</span>
+            </div>
+            <div style="font-size:12px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">
+              ${lastMsg ? lastMsg.text : 'Новое совпадение!'}
+            </div>
+          </div>
+        `;
+
+        item.addEventListener('click', () => {
+          document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          openChatForApartment(apt.id);
+        });
+
+        listEl.appendChild(item);
+      });
+    }
+
+    function openChatForApartment(aptId) {
+      state.currentChatId = aptId;
+      const apt = APARTMENTS.find(a => a.id === aptId);
+      const chat = state.chats.find(c => c.aptId === aptId);
+      if (!apt || !chat) return;
+
+      document.getElementById('convo-name').textContent = `${apt.landlordName} • $${apt.priceUsd} (${apt.district}, ${apt.address})`;
+      document.getElementById('convo-avatar').src = apt.image;
+
+      renderMessages(chat, apt);
+    }
+
+    function renderMessages(chat, apt) {
+      const body = document.getElementById('convo-body');
+      body.innerHTML = '';
+
+      chat.messages.forEach(msg => {
+        const b = document.createElement('div');
+        b.className = `msg-bubble ${msg.sender === 'bot' ? 'msg-bot' : 'msg-user'}`;
+        b.textContent = msg.text;
+        body.appendChild(b);
+      });
+
+      const bookingCard = document.createElement('div');
+      bookingCard.className = 'booking-card';
+      const isConfirmed = chat.viewingStatus === 'confirmed';
+
+      bookingCard.innerHTML = `
+        <div class="booking-title">
+          <span>📅</span>
+          <span>Запрос на просмотр квартиры</span>
+        </div>
+        <div style="font-size:13px; color:var(--text-muted);">
+          Предложенное время: <b>${chat.viewingDate}</b>
+        </div>
+        <div style="font-size:12px; color:var(--text-muted);">
+          Адрес: <b>${apt.address} (${apt.district})</b>
+        </div>
+        <button class="booking-btn ${isConfirmed ? 'confirmed' : ''}" id="booking-btn-action">
+          ${isConfirmed ? '✅ Просмотр подтвержден!' : '⚡ Подтвердить время просмотра'}
+        </button>
+      `;
+
+      body.appendChild(bookingCard);
+
+      document.getElementById('booking-btn-action').onclick = () => {
+        if (chat.viewingStatus === 'confirmed') {
+          showToast('Просмотр уже согласован!');
+          return;
+        }
+
+        chat.viewingStatus = 'confirmed';
+        chat.messages.push({
+          sender: 'bot',
+          text: `🎉 Отлично! Просмотр назначен на ${chat.viewingDate}. Мы отправили ваши контакты собственнику ${apt.landlordName} (${apt.landlordPhone}) и в Telegram-бот.`
+        });
+        renderMessages(chat, apt);
+        showToast('Просмотр подтвержден! Собственник уведомлен.');
+      };
+
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function sendUserMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chat = state.chats.find(c => c.aptId === state.currentChatId);
+      const apt = APARTMENTS.find(a => a.id === state.currentChatId);
+      if (!chat || !apt) return;
+
+      chat.messages.push({ sender: 'user', text: text });
+      input.value = '';
+      renderMessages(chat, apt);
+
+      setTimeout(() => {
+        chat.messages.push({
+          sender: 'bot',
+          text: `${apt.landlordName} принял сообщение: "${text}". Ответ поступит в течение 10–15 минут.`
+        });
+        renderMessages(chat, apt);
+      }, 1100);
+    }
+
+    document.getElementById('chat-send-btn').addEventListener('click', sendUserMessage);
+    document.getElementById('chat-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendUserMessage();
+    });
+
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const text = chip.dataset.text;
+        const input = document.getElementById('chat-input');
+        input.value = text;
+        sendUserMessage();
+      });
+    });
+
+    // --- PROFILE & QUESTIONNAIRE ---
+    document.getElementById('save-profile-btn').addEventListener('click', () => {
+      state.profile.name = document.getElementById('q-name').value;
+      state.profile.phone = document.getElementById('q-phone').value;
+      state.profile.period = document.getElementById('q-period').value;
+      state.profile.tenants = document.getElementById('q-tenants').value;
+      state.profile.pets = document.getElementById('q-pets').value;
+      state.profile.district = document.getElementById('q-district').value;
+
+      document.getElementById('profile-display-name').textContent = state.profile.name;
+      document.getElementById('profile-display-phone').textContent = state.profile.phone;
+      document.getElementById('avatar-initial').textContent = (state.profile.name[0] || 'A').toUpperCase();
+
+      try { localStorage.setItem('rentch_profile', JSON.stringify(state.profile)); } catch(e) {}
+      showToast('✅ Анкета арендатора успешно обновлена!');
+    });
+
+    // --- FILTERS MODAL ---
+    const filterModal = document.getElementById('filter-modal');
+    ['filter-btn-mobile', 'filter-btn-desktop'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) btn.addEventListener('click', () => filterModal.classList.add('open'));
+    });
+    document.getElementById('filter-close-btn').addEventListener('click', () => filterModal.classList.remove('open'));
+
+    const budgetInput = document.getElementById('filter-budget');
+    const budgetVal = document.getElementById('budget-val');
+    budgetInput.addEventListener('input', (e) => {
+      budgetVal.textContent = `$${e.target.value}`;
+    });
+
+    document.getElementById('apply-filters-btn').addEventListener('click', () => {
+      state.filters.maxBudget = parseInt(budgetInput.value);
+      state.filters.district = document.getElementById('filter-district').value;
+      state.filters.furniture = document.getElementById('filter-furniture').value;
+      state.filters.petsOnly = document.getElementById('filter-pets').checked;
+
+      state.currentIndex = 0;
+      filterModal.classList.remove('open');
+      renderDeck();
+      showToast('Фильтры применены!');
+    });
+
+    // --- TELEGRAM ---
+    ['tg-btn-mobile', 'tg-btn-desktop', 'tg-test-btn'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) btn.addEventListener('click', () => {
+        showToast('✈️ Тестовое оповещение отправлено в Telegram @RentchTbilisiBot!');
+      });
+    });
+
+    // --- PWA (PROGRESSIVE WEB APP) SERVICE WORKER & INSTALL LOGIC ---
+    let deferredPrompt = null;
+    const pwaBanner = document.getElementById('pwa-install-banner');
+    const pwaBtnMobile = document.getElementById('pwa-install-btn-mobile');
+    const pwaBtnDesktop = document.getElementById('pwa-install-btn-desktop');
+    const pwaBannerActionBtn = document.getElementById('pwa-banner-action-btn');
+    const pwaBannerCloseBtn = document.getElementById('pwa-banner-close-btn');
+    const pwaIosModal = document.getElementById('pwa-ios-modal');
+    const pwaIosCloseBtn = document.getElementById('pwa-ios-close-btn');
+    const pwaIosDoneBtn = document.getElementById('pwa-ios-done-btn');
+
+    // Register Service Worker for offline capability
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('Rentch PWA ServiceWorker registered with scope:', reg.scope))
+          .catch((err) => console.warn('Rentch PWA ServiceWorker error:', err));
+      });
+    }
+
+    const isIosDevice = () => {
+      const ua = window.navigator.userAgent.toLowerCase();
+      return /iphone|ipad|ipod/.test(ua);
+    };
+
+    const isAppStandalone = () => {
+      return (window.matchMedia('(display-mode: standalone)').matches) ||
+             (window.navigator.standalone === true);
+    };
+
+    const isPwaDismissed = () => {
+      try { return sessionStorage.getItem('rentch_pwa_dismissed') === 'true'; } catch(e) { return false; }
+    };
+
+    // Chromium beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+
+      if (!isPwaDismissed() && !isAppStandalone()) {
+        setTimeout(() => {
+          if (pwaBanner) pwaBanner.style.display = 'flex';
+        }, 1200);
+      }
+      if (pwaBtnMobile) pwaBtnMobile.style.display = 'inline-flex';
+      if (pwaBtnDesktop) pwaBtnDesktop.style.display = 'inline-flex';
+    });
+
+    window.addEventListener('appinstalled', () => {
+      showToast('🎉 Rentch успешно установлен на ваш телефон!');
+      if (pwaBanner) pwaBanner.style.display = 'none';
+      if (pwaBtnMobile) pwaBtnMobile.style.display = 'none';
+      deferredPrompt = null;
+    });
+
+    function handlePwaInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            showToast('⏳ Установка Rentch на устройство...');
+            if (pwaBanner) pwaBanner.style.display = 'none';
+          }
+          deferredPrompt = null;
+        });
+      } else if (isIosDevice() && !isAppStandalone()) {
+        if (pwaIosModal) pwaIosModal.classList.add('open');
+      } else {
+        if (isIosDevice()) {
+          if (pwaIosModal) pwaIosModal.classList.add('open');
+        } else {
+          showToast('💡 В меню браузера (⋮) выберите «Установить приложение» или «На экран Домой»');
+        }
+      }
+    }
+
+    if (pwaBtnMobile) pwaBtnMobile.addEventListener('click', handlePwaInstall);
+    if (pwaBtnDesktop) pwaBtnDesktop.addEventListener('click', handlePwaInstall);
+    if (pwaBannerActionBtn) pwaBannerActionBtn.addEventListener('click', handlePwaInstall);
+
+    if (pwaBannerCloseBtn) {
+      pwaBannerCloseBtn.addEventListener('click', () => {
+        if (pwaBanner) pwaBanner.style.display = 'none';
+        try { sessionStorage.setItem('rentch_pwa_dismissed', 'true'); } catch(e) {}
+      });
+    }
+
+    if (pwaIosCloseBtn) pwaIosCloseBtn.addEventListener('click', () => pwaIosModal.classList.remove('open'));
+    if (pwaIosDoneBtn) pwaIosDoneBtn.addEventListener('click', () => pwaIosModal.classList.remove('open'));
+
+    // Show banner on iOS if not standalone
+    if (isIosDevice() && !isAppStandalone() && !isPwaDismissed()) {
+      setTimeout(() => {
+        if (pwaBanner) pwaBanner.style.display = 'flex';
+      }, 1500);
+    }
+
+    // Initial load
+    renderDeck();
+  </script>
+</body>
+</html>
